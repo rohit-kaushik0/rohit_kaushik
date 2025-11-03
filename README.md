@@ -52,19 +52,74 @@ app/
 - Tailwind CSS 3.4
 - Framer Motion 12.5
 
-## 🚢 Deploy
+## 🚢 Deploy to Vercel
 
-### Vercel (Recommended)
+### Prerequisites
 
-1. Push to GitHub
-2. Import on [Vercel](https://vercel.com)
-3. Deploy automatically
+Before deploying, make sure you have:
+- A GitHub account
+- A Vercel account (free tier available)
+- Your repository pushed to GitHub
 
-### Manual
+### Deployment Steps
+
+1. **Push your code to GitHub**
+   ```bash
+   git add .
+   git commit -m "Ready for deployment"
+   git push origin main
+   ```
+
+2. **Import to Vercel**
+   - Go to [Vercel](https://vercel.com)
+   - Click "New Project"
+   - Import your GitHub repository
+   - Vercel will auto-detect Next.js settings
+
+3. **Configure Environment Variables**
+   
+   In Vercel Project Settings → Environment Variables, add:
+   ```
+   SMTP_HOST=smtp.gmail.com
+   SMTP_PORT=587
+   SMTP_SECURE=false
+   SMTP_USER=your-email@gmail.com
+   SMTP_PASSWORD=your-app-password
+   RECIPIENT_EMAIL=rohit.kaushik@zylentrix.net
+   ```
+
+4. **Deploy**
+   - Click "Deploy"
+   - Wait for build to complete (~2 minutes)
+   - Your site is live! 🎉
+
+### Update Deployment URLs
+
+After deploying, update these files with your actual Vercel URL:
+
+1. `app/layout.tsx` - Update `metadataBase` URL
+2. `app/robots.ts` - Update sitemap URL
+3. `app/sitemap.ts` - Update base URL
+
+### Automatic Deployments
+
+Every push to `main` branch will automatically trigger a new deployment on Vercel.
+
+### Performance Optimizations Included
+
+✅ Automatic image optimization (AVIF/WebP)
+✅ Console logs removed in production
+✅ Code splitting and tree shaking
+✅ Compressed assets
+✅ Optimized fonts loading
+✅ SEO meta tags configured
+✅ Robots.txt and Sitemap.xml
+
+### Build Locally (Optional)
 
 ```bash
 pnpm build
-# Upload /out folder
+pnpm start
 ```
 
 ## 🎯 Features

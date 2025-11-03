@@ -1,8 +1,29 @@
-node_modules
-.next
-out
-build
-*.log
-.DS_Store
-.env*.local
+# Development files
+*.md
+.env.example
+.env.local.example
 
+# Editor
+.vscode
+.idea
+*.swp
+*.swo
+
+# Testing
+*.test.*
+*.spec.*
+__tests__
+
+# Documentation (except README)
+docs/
+CHANGELOG.md
+CONTRIBUTING.md
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Logs
+*.log
+npm-debug.log*
