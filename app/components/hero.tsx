@@ -212,19 +212,19 @@ const Home: React.FC = () => {
                 <div className="absolute inset-0 border-2 border-cyan-400/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" />
                 
                 {/* Inner glass container */}
-                <div className="relative bg-black/50 backdrop-blur-sm rounded-3xl overflow-hidden">
+                <div className="relative bg-black/20 backdrop-blur-sm rounded-3xl overflow-hidden">
                   {/* Profile Image */}
                   <div className="relative aspect-square">
                     <Image
                       src="/images/profile.png"
                       alt="Rohit Kaushik - Tech Lead"
                       fill
-                      className="object-cover object-center"
+                      className="object-cover object-center brightness-110"
                       priority
                     />
                     
-                    {/* Simple dark overlay - no gradients */}
-                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-300" />
+                    {/* Simple dark overlay - reduced opacity for brighter image */}
+                    <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-all duration-300" />
                   </div>
                   
                   {/* Subtle consistent cyan glow on hover */}

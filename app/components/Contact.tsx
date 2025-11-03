@@ -26,11 +26,29 @@ const Contact: React.FC = () => {
     e.preventDefault()
     setIsSubmitting(true)
 
-    setTimeout(() => {
-      toast.success('Message sent! I\'ll get back to you soon.')
-      setFormData({ name: '', email: '', message: '' })
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        toast.success('Message sent! I\'ll get back to you soon.')
+        setFormData({ name: '', email: '', message: '' })
+      } else {
+        toast.error(data.error || 'Failed to send message. Please try again.')
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      toast.error('An error occurred. Please try again later.')
+    } finally {
       setIsSubmitting(false)
-    }, 1500)
+    }
   }
 
   return (
