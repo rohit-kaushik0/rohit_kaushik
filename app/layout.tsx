@@ -18,7 +18,7 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Rohit Kaushik — Full Stack Developer',
+  title: 'Rohit Kaushik - Full Stack Developer',
   description: 'Full Stack Developer crafting digital experiences at the intersection of design, technology, and user experience.',
   keywords: 'Full Stack Developer, React, Next.js, Flutter, TypeScript, Web Development, UI/UX',
   authors: [{ name: 'Rohit Kaushik' }],

@@ -152,7 +152,7 @@ const Experience: React.FC = () => {
               <div>
                 <h4 className="text-lg font-semibold text-white group-hover:text-cyan-400 transition-colors duration-300 mb-2">Mission</h4>
                 <p className="text-sm text-neutral-400 leading-relaxed">
-                  Building technology that empowers people and organizations — driving innovation, 
+                  Building technology that empowers people and organizations driving innovation, 
                   leading teams, and creating solutions that make a lasting impact.
                 </p>
               </div>
