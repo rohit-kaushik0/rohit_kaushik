@@ -84,6 +84,34 @@
                 0 0 45px rgba(34, 211, 238, 0.2);
   }
 
+  .depth-scene {
+    perspective: 1400px;
+    transform-style: preserve-3d;
+  }
+
+  .depth-card {
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+    will-change: transform;
+  }
+
+  .depth-card:hover {
+    box-shadow: 0 20px 60px rgba(34, 211, 238, 0.12);
+  }
+
+  .depth-layer {
+    transform-style: preserve-3d;
+    transition: opacity 0.45s ease, transform 0.6s ease;
+  }
+
+  .depth-layer[data-depth='mid'] {
+    transform: translateZ(40px);
+  }
+
+  .depth-layer[data-depth='front'] {
+    transform: translateZ(80px);
+  }
+
   /* Card with glassmorphism */
   .card-glass {
     @apply glass p-6 transition-all duration-300
@@ -110,6 +138,11 @@ html {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .depth-card {
+    transform: none !important;
+    box-shadow: none !important;
   }
 }
 

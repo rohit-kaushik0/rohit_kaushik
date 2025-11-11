@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import React, { useState, useEffect, useRef } from 'react'
+import { motion, useReducedMotion } from 'framer-motion'
 import { FaGithub, FaLinkedin, FaInstagram, FaTwitter } from 'react-icons/fa'
 import { ArrowDownIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
@@ -67,6 +67,82 @@ const TypingText: React.FC = () => {
 }
 
 const Home: React.FC = () => {
+  const profileCardRef = useRef<HTMLDivElement>(null)
+  const tiltFrame = useRef<number | null>(null)
+  const shouldReduceMotion = useReducedMotion()
+
+  useEffect(() => {
+    const card = profileCardRef.current
+    if (!card) return
+
+    if (shouldReduceMotion) {
+      if (tiltFrame.current) {
+        cancelAnimationFrame(tiltFrame.current)
+        tiltFrame.current = null
+      }
+      card.style.transform = ''
+      return
+    }
+
+    const updateTransform = (rotateX: number, rotateY: number, lift = 0) => {
+      const element = profileCardRef.current
+      if (!element) return
+      element.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(${lift}px)`
+    }
+
+    const handlePointerMove = (event: PointerEvent) => {
+      const element = profileCardRef.current
+      if (!element) return
+
+      const rect = element.getBoundingClientRect()
+      const relativeX = (event.clientX - rect.left) / rect.width
+      const relativeY = (event.clientY - rect.top) / rect.height
+
+      const rotateY = (relativeX - 0.5) * 18
+      const rotateX = (0.5 - relativeY) * 14
+      const lift = 22
+
+      if (tiltFrame.current) {
+        cancelAnimationFrame(tiltFrame.current)
+      }
+
+      tiltFrame.current = requestAnimationFrame(() => {
+        updateTransform(rotateX, rotateY, lift)
+        tiltFrame.current = null
+      })
+    }
+
+    const resetTransform = () => {
+      if (tiltFrame.current) {
+        cancelAnimationFrame(tiltFrame.current)
+      }
+
+      tiltFrame.current = requestAnimationFrame(() => {
+        updateTransform(0, 0, 0)
+        tiltFrame.current = null
+      })
+    }
+
+    updateTransform(0, 0, 0)
+
+    card.addEventListener('pointermove', handlePointerMove)
+    card.addEventListener('pointerleave', resetTransform)
+    card.addEventListener('pointerup', resetTransform)
+    card.addEventListener('pointercancel', resetTransform)
+
+    return () => {
+      card.removeEventListener('pointermove', handlePointerMove)
+      card.removeEventListener('pointerleave', resetTransform)
+      card.removeEventListener('pointerup', resetTransform)
+      card.removeEventListener('pointercancel', resetTransform)
+      if (tiltFrame.current) {
+        cancelAnimationFrame(tiltFrame.current)
+        tiltFrame.current = null
+      }
+      card.style.transform = ''
+    }
+  }, [shouldReduceMotion])
+
   const handleResumeClick = () => {
     window.open('/resume/resume.pdf', '_blank', 'noopener,noreferrer')
   }
@@ -198,44 +274,40 @@ const Home: React.FC = () => {
             transition={{ delay: 0.8 }}
             className="space-y-8 lg:border-l lg:border-neutral-900 lg:pl-12"
           >
-            {/* Profile Image with Minimalist Design */}
+            {/* Profile Image with Immersive Depth */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0, scale: 0.85 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.6, type: "spring", stiffness: 100 }}
-              className="relative group"
-              whileHover={{ scale: 1.02 }}
+              transition={{ delay: 0.6, type: 'spring', stiffness: 90 }}
+              className="depth-scene"
             >
-              {/* Glass frame container - cyan only on hover */}
-              <div className="relative glass-strong p-1 rounded-3xl overflow-hidden border border-white/10 group-hover:border-white/20 transition-all duration-500">
-                {/* Subtle cyan border on hover */}
-                <div className="absolute inset-0 border-2 border-cyan-400/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" />
-                
-                {/* Inner glass container */}
-                <div className="relative bg-black/20 backdrop-blur-sm rounded-3xl overflow-hidden">
-                  {/* Profile Image */}
-                  <div className="relative aspect-square">
-                    <Image
-                      src="/images/profile.png"
-                      alt="Rohit Kaushik - Tech Lead"
-                      fill
-                      className="object-cover object-center brightness-110"
-                      priority
-                    />
-                    
-                    {/* Simple dark overlay - reduced opacity for brighter image */}
-                    <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-all duration-300" />
+              <div
+                ref={profileCardRef}
+                className="relative group depth-card"
+              >
+                <div className="relative glass-strong p-1 rounded-3xl overflow-hidden border border-white/10 group-hover:border-cyan-300/60 transition-all duration-500">
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-cyan-500/10 via-transparent to-purple-500/10 opacity-0 group-hover:opacity-80 transition-opacity duration-500" />
+                  <div className="absolute inset-0 rounded-3xl border border-cyan-400/20 opacity-20 group-hover:opacity-100 transition-opacity duration-500 mix-blend-screen" />
+                  <div className="relative bg-black/40 backdrop-blur-sm rounded-3xl overflow-hidden shadow-[inset_0_0_40px_rgba(12,226,255,0.08)]">
+                    <div className="relative aspect-square">
+                      <Image
+                        src="/images/profile.png"
+                        alt="Rohit Kaushik - Tech Lead"
+                        fill
+                        className="object-cover object-center brightness-110 saturate-125"
+                        priority
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-tr from-black/40 via-black/10 to-transparent opacity-80 group-hover:opacity-50 transition-opacity duration-500" />
+                    </div>
+                    <div className="absolute inset-x-0 -bottom-[18%] h-1/3 blur-3xl bg-gradient-to-t from-cyan-400/60 via-transparent to-transparent opacity-0 group-hover:opacity-80 transition-opacity duration-700" />
+                    <div className="absolute inset-x-6 bottom-6 h-[1px] bg-gradient-to-r from-transparent via-white/60 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
                   </div>
-                  
-                  {/* Subtle consistent cyan glow on hover */}
-                  <div className="absolute -inset-1 bg-cyan-400/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-20 transition-opacity duration-500 -z-10" />
+                </div>
+                <div className="pointer-events-none">
+                  <div className="absolute -top-8 -right-8 h-28 w-28 rounded-full bg-cyan-400/25 blur-3xl opacity-0 group-hover:opacity-80 transition-opacity duration-500" />
+                  <div className="absolute -bottom-10 -left-6 h-32 w-32 rounded-full bg-purple-500/20 blur-3xl opacity-0 group-hover:opacity-70 transition-opacity duration-500" />
                 </div>
               </div>
-
-              {/* Minimal decorative glow - cyan only on hover */}
-              <motion.div
-                className="absolute -top-2 -right-2 w-16 h-16 bg-cyan-400/10 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-              />
             </motion.div>
 
             {/* Currently */}
@@ -284,3 +356,4 @@ const Home: React.FC = () => {
 }
 
 export default Home
+
